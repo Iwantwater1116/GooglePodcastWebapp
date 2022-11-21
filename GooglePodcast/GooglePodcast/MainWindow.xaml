@@ -1,0 +1,70 @@
+﻿<Window x:Class="GooglePodcast.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:local="clr-namespace:GooglePodcast"
+        mc:Ignorable="d"
+        Title="Google Podcast" Height="704" Width="855"
+        Loaded="Window_Loaded" Icon="/Google_Podcasts_icon.png">
+    <Window.Resources>
+        <Storyboard x:Key="Progress" RepeatBehavior="Forever" SpeedRatio="1.5">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ed:Arc.EndAngle)" Storyboard.TargetName="arc">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-10">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="-1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ed:Arc.StartAngle)" Storyboard.TargetName="arc">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-360"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="-11">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="rotate" RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="arc">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="360"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard x:Name="rotate_BeginStoryboard" Storyboard="{StaticResource Progress}"/>
+            <BeginStoryboard x:Name="rotate_BeginStoryboard1" Storyboard="{StaticResource rotate}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid>
+        <cef:ChromiumWebBrowser x:Name="Broser" Address="https://podcasts.google.com/"/>
+        <Label x:Name="Lbl_ConnectError" Content="無法連線至Podcast，請檢查您的連線。" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" FontSize="20" FontWeight="Bold"/>
+        <Button x:Name="Btn_Reloading" Content="重新載入" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="40" Margin="0,150,0,0" Visibility="Hidden" Click="Btn_Reloading_Click"/>
+        <Viewbox x:Name="Loading_Cricle" Stretch="Uniform" Visibility="Hidden">
+            <Grid x:Name="grid" Height="300" Width="300">
+                <ed:Arc x:Name="arc" ArcThickness="3" EndAngle="-350" Fill="#4285F4"  HorizontalAlignment="Center" Height="40" Stretch="None" Stroke="Black" StartAngle="-360" VerticalAlignment="Center" Width="40" RenderTransformOrigin="0.5,0.5" StrokeThickness="0">
+                    <ed:Arc.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </ed:Arc.RenderTransform>
+                </ed:Arc>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</Window>
